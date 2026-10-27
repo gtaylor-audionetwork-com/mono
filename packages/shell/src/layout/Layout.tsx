@@ -19,7 +19,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link href="/" className={styles.brand}>
-            Music catalogue
+            My monorepo
           </Link>
           <nav aria-label="Main" className={styles.nav}>
             {NAV.map((item) => (
