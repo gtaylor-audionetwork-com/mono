@@ -19,4 +19,12 @@ describe("@web/home", () => {
     homePage.elements.featuredAlbumCard().should("be.visible");
     homePage.elements.featuredAlbumLink().should("be.visible");
   });
+
+  it("promotes the featured collection in a new tab", () => {
+    cy.findByRole("heading", { name: "Featured collection" }).should("be.visible");
+    cy.findByRole("link", { name: "Open Beats for cats" })
+      .should("have.attr", "href", "/collection/beats")
+      .and("have.attr", "target", "_blank")
+      .and("have.attr", "rel", "noopener noreferrer");
+  });
 });

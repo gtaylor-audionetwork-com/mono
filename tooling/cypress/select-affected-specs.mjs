@@ -3,7 +3,7 @@
  * Maps git-changed paths to Cypress spec files. Used locally and in GitHub Actions
  * to run a subset of E2E instead of the full suite.
  *
- * Host paths use first-match rules so `(marketing)/` edits do not pull the full suite.
+ * Host paths use first-match rules so support/login wiring edits stay targeted.
  */
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -19,10 +19,14 @@ const SPEC = {
   albumTracks: "packages/domains/album/e2e/album-tracks.spec.ts",
   crossDomain: "packages/domains/album/e2e/cross-domain-travel.spec.ts",
   projects: "packages/domains/projects/e2e/projects.spec.ts",
+  projectsAuth: "packages/domains/projects/e2e/projects-auth.spec.ts",
   nav: "packages/shell/e2e/navigation.spec.ts",
   addToProject: "packages/shell/e2e/add-to-project.spec.ts",
   downloadModal: "packages/shell/e2e/download-modal.spec.ts",
-  marketingSupport: "apps/host/e2e/marketing/support.spec.ts",
+  support: "packages/domains/support/e2e/support.spec.ts",
+  login: "packages/domains/login/e2e/login.spec.ts",
+  workWithUs: "packages/domains/work-with-us/e2e/work-with-us.spec.ts",
+  collectionBeats: "packages/domains/collection-beats/e2e/collection-beats.spec.ts",
 };
 
 const ALL_SPECS = [
@@ -31,23 +35,30 @@ const ALL_SPECS = [
   SPEC.albumTracks,
   SPEC.crossDomain,
   SPEC.projects,
+  SPEC.projectsAuth,
   SPEC.nav,
   SPEC.addToProject,
   SPEC.downloadModal,
-  SPEC.marketingSupport,
+  SPEC.support,
+  SPEC.login,
+  SPEC.workWithUs,
+  SPEC.collectionBeats,
 ].map((relative) => path.join(repoRoot, relative));
 
 const SMOKE_SPECS = [path.join(repoRoot, SPEC.nav)];
 
 const SPEC_SETS = {
   smoke: [SPEC.nav],
-  marketing: [SPEC.marketingSupport],
+  support: [SPEC.support],
+  login: [SPEC.nav, SPEC.login],
+  workWithUs: [SPEC.nav, SPEC.workWithUs],
   hostAppIntegration: [SPEC.nav, SPEC.home, SPEC.crossDomain],
-  hostRoot: [SPEC.nav, SPEC.marketingSupport],
+  hostRoot: [SPEC.nav, SPEC.support],
   shell: [SPEC.nav, SPEC.addToProject, SPEC.downloadModal],
   home: [SPEC.home, SPEC.nav],
   album: [SPEC.albums, SPEC.albumTracks, SPEC.crossDomain, SPEC.nav],
-  projects: [SPEC.projects, SPEC.nav],
+  projects: [SPEC.projects, SPEC.projectsAuth, SPEC.nav],
+  collectionBeats: [SPEC.collectionBeats],
   full: ALL_SPECS.map((absolute) => path.relative(repoRoot, absolute)),
 };
 
@@ -61,19 +72,25 @@ function specsForChangedFile(file) {
     return SPEC_SETS.full;
   }
   if (file.startsWith("apps/host/app/(marketing)/")) {
-    return SPEC_SETS.marketing;
+    return SPEC_SETS.collectionBeats;
+  }
+  if (file.startsWith("apps/host/app/(support)/")) {
+    return SPEC_SETS.support;
+  }
+  if (file.startsWith("apps/host/app/(app)/login/")) {
+    return SPEC_SETS.login;
   }
   if (file.startsWith("apps/host/app/(app)/")) {
+    if (file.includes("/work-with-us/")) {
+      return SPEC_SETS.workWithUs;
+    }
     return SPEC_SETS.hostAppIntegration;
   }
   if (file.startsWith("apps/host/app/api/")) {
     return SPEC_SETS.hostAppIntegration;
   }
-  if (file.startsWith("apps/host/middleware.")) {
-    return [...SPEC_SETS.hostAppIntegration, SPEC.projects];
-  }
-  if (file.startsWith("apps/host/e2e/marketing/")) {
-    return SPEC_SETS.marketing;
+  if (file.startsWith("apps/host/middleware.") || file.startsWith("apps/host/lib/session.")) {
+    return [...SPEC_SETS.hostAppIntegration, SPEC.projects, SPEC.projectsAuth];
   }
   if (file.startsWith("apps/host/")) {
     return SPEC_SETS.hostRoot;
@@ -86,6 +103,18 @@ function specsForChangedFile(file) {
   }
   if (file.startsWith("packages/domains/projects/")) {
     return SPEC_SETS.projects;
+  }
+  if (file.startsWith("packages/domains/login/")) {
+    return SPEC_SETS.login;
+  }
+  if (file.startsWith("packages/domains/work-with-us/")) {
+    return SPEC_SETS.workWithUs;
+  }
+  if (file.startsWith("packages/domains/support/")) {
+    return SPEC_SETS.support;
+  }
+  if (file.startsWith("packages/domains/collection-beats/")) {
+    return SPEC_SETS.collectionBeats;
   }
   if (
     file.startsWith("packages/shell/") ||
@@ -227,6 +256,14 @@ function pipelineTestsForCypressSpecs(cypressSpecs) {
       tests.add("packages/domains/album/pipeline.test.mjs");
     } else if (spec.startsWith("packages/domains/projects/")) {
       tests.add("packages/domains/projects/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/domains/login/")) {
+      tests.add("packages/domains/login/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/domains/work-with-us/")) {
+      tests.add("packages/domains/work-with-us/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/domains/support/")) {
+      tests.add("packages/domains/support/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/domains/collection-beats/")) {
+      tests.add("packages/domains/collection-beats/pipeline.test.mjs");
     } else if (spec.startsWith("packages/shell/")) {
       tests.add("packages/shell/pipeline.test.mjs");
     } else if (spec.startsWith("apps/host/")) {

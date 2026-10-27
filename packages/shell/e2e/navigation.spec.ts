@@ -15,7 +15,13 @@ describe("@web/shell navigation", () => {
     homePage.elements.heading().should("be.visible");
   });
 
-  it("lists seed projects in the sidebar", () => {
+  it("hides the projects sidebar when logged out", () => {
+    homePage.visit();
+    cy.findByRole("navigation", { name: "Projects" }).should("not.exist");
+  });
+
+  it("lists seed projects in the sidebar when signed in", () => {
+    cy.signInDemo();
     homePage.visit();
     homePage.elements.projectsSidebar.heading().should("be.visible");
     homePage.elements.projectsSidebar.projectLink(/Coastal Studies/).should("be.visible");

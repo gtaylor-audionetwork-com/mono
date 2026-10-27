@@ -1,0 +1,33 @@
+{
+  "name": "@web/login",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "dev": "next dev dev --port 3004",
+    "build": "next build dev",
+    "lint": "eslint src dev",
+    "typecheck": "tsc && tsc -p dev"
+  },
+  "dependencies": {
+    "@web/data": "workspace:*"
+  },
+  "peerDependencies": {
+    "next": "^16",
+    "react": "^19"
+  },
+  "devDependencies": {
+    "@web/eslint-config": "workspace:*",
+    "@web/shell": "workspace:*",
+    "@web/tsconfig": "workspace:*",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "10.12.0",
+    "next": "16.3.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "5.9.3"
+  }
+}

@@ -18,6 +18,6 @@ describe("@web/album cross-domain travel", () => {
     albumPage.elements.homeLink().click();
     cy.url().should("match", /\/$/);
     homePage.elements.heading().should("be.visible");
-    cy.findByRole("link", { name: "Music catalogue" }).should("be.visible");
+    cy.findByRole("link", { name: "My monorepo" }).should("be.visible");
   });
 });
