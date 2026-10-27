@@ -31,18 +31,20 @@ Cypress **runs from** `apps/host` (port 9000) but **specs live next to the code 
 - `packages/shell/e2e/` — navigation, modals, player
 - `tooling/cypress/` — page objects, support, and the affected-spec selector
 
-GitHub Actions (`.github/workflows/ci.yml`) runs lint/typecheck on every PR, then **only the Cypress
-specs mapped from changed paths** — not the full suite. Locally:
+GitHub Actions (`.github/workflows/ci.yml`) runs lint/typecheck, then an **affected test targeting**
+job: it prints which Cypress specs would run for the PR (see the job log and **Summary** tab) and
+runs small **pipeline** checks in each touched package — no Cypress, no Music API on CI. Locally:
 
 ```bash
-pnpm e2e:affected                 # e.g. packages/domains/home/ → home + navigation
+pnpm affected:report              # same targeting table as CI (log + optional Summary locally)
+pnpm e2e:affected                 # list Cypress spec paths for this branch
 pnpm dev                          # terminal 1
-pnpm e2e:affected:run             # terminal 2
+pnpm e2e:affected:run             # terminal 2 — real Cypress against :9000
 pnpm cypress:run                  # full suite
 ```
 
-Catalogue specs need `MUSIC_API_URL` and `MUSIC_API_KEY` (local: `apps/host/.env.local`; CI: repo
-secrets with the same names). Project and featured-track specs use in-memory Zustand state only.
+Catalogue Cypress specs need `MUSIC_API_URL` and `MUSIC_API_KEY` in `apps/host/.env.local`. Project
+and featured-track specs use in-memory Zustand state only.
 
 ## Layout
 

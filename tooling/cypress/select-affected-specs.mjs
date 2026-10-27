@@ -173,15 +173,43 @@ function formatOutput(specs, format) {
   return repoRelative.join("\n");
 }
 
+export function getAffectedPlan(baseRef) {
+  const changedFiles = gitChangedFiles(baseRef) ?? [];
+  const cypressSpecsAbsolute = selectSpecs(changedFiles.length ? changedFiles : null);
+  const cypressSpecs = cypressSpecsAbsolute.map((absolute) => path.relative(repoRoot, absolute));
+  const selectedSet = new Set(cypressSpecs);
+  const allRelative = ALL_SPECS.map((absolute) => path.relative(repoRoot, absolute));
+  const skippedCypressSpecs = allRelative.filter((spec) => !selectedSet.has(spec));
+  const pipelineTests = pipelineTestsForCypressSpecs(cypressSpecs);
+  return { changedFiles, cypressSpecs, skippedCypressSpecs, pipelineTests };
+}
+
+/** CI runs these Node tests instead of Cypress — same targeting, no Music API. */
+function pipelineTestsForCypressSpecs(cypressSpecs) {
+  const tests = new Set();
+  for (const spec of cypressSpecs) {
+    if (spec.startsWith("packages/domains/home/")) {
+      tests.add("packages/domains/home/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/domains/album/")) {
+      tests.add("packages/domains/album/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/domains/projects/")) {
+      tests.add("packages/domains/projects/pipeline.test.mjs");
+    } else if (spec.startsWith("packages/shell/")) {
+      tests.add("packages/shell/pipeline.test.mjs");
+    }
+  }
+  return [...tests].sort();
+}
+
 function main() {
   const { base, format } = parseArgs(process.argv.slice(2));
-  const changed = gitChangedFiles(base);
-  const specs = selectSpecs(changed);
-  const body = formatOutput(specs, format);
+  const { cypressSpecs } = getAffectedPlan(base);
+  const specsAbsolute = resolveSpecs(cypressSpecs);
+  const body = formatOutput(specsAbsolute, format);
 
   if (format === "github") {
     process.stdout.write(`specs=${body}\n`);
-    process.stdout.write(`count=${specs.length}\n`);
+    process.stdout.write(`count=${specsAbsolute.length}\n`);
     return;
   }
 
@@ -189,4 +217,7 @@ function main() {
   if (!body.endsWith("\n")) process.stdout.write("\n");
 }
 
-main();
+const isCli = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+if (isCli) {
+  main();
+}

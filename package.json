@@ -12,7 +12,8 @@
     "e2e": "pnpm --filter @web/host e2e",
     "e2e:ci": "pnpm --filter @web/host e2e:ci",
     "e2e:affected": "node tooling/cypress/select-affected-specs.mjs",
-    "e2e:affected:run": "node tooling/cypress/run-affected.mjs"
+    "e2e:affected:run": "node tooling/cypress/run-affected.mjs",
+    "affected:report": "node tooling/cypress/report-affected.mjs"
   },
   "devDependencies": {
     "turbo": "2.11.6"
