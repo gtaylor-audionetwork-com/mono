@@ -64,7 +64,8 @@ async function musicGet<T>(path: string): Promise<T | undefined> {
   const baseUrl = process.env.MUSIC_API_URL;
   const apiKey = process.env.MUSIC_API_KEY;
   if (!baseUrl || !apiKey) {
-    throw new Error("Set MUSIC_API_URL and MUSIC_API_KEY to fetch the catalogue.");
+    // Allow `next build` and pages to render without catalogue data when env is unset (e.g. CI before secrets).
+    return undefined;
   }
 
   const response = await fetch(`${baseUrl}${path}`, {
