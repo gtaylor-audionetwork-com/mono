@@ -16,6 +16,9 @@ export async function HomePage() {
       </div>
       {featured ? (
         <Card title="Featured album">
+          {featured.artworkUrl ? (
+            <img className={styles.artwork} src={featured.artworkUrl} alt="" />
+          ) : null}
           {featured.shortDescription ? <p className={styles.intro}>{featured.shortDescription}</p> : null}
           <p className={styles.cardLink}>
             <Link href={`/album/${featured.id}`}>Open {featured.title}</Link>
