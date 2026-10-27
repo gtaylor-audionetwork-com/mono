@@ -54,7 +54,8 @@ const RULES = [
       file.startsWith("packages/shell/") ||
       file.startsWith("packages/actions/") ||
       file.startsWith("packages/data/") ||
-      file.startsWith("packages/composites/"),
+      file.startsWith("packages/composites/") ||
+      file.startsWith("packages/api/download/"),
     specs: () => [
       "packages/shell/e2e/navigation.spec.ts",
       "packages/shell/e2e/add-to-project.spec.ts",

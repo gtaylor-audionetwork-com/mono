@@ -10,7 +10,6 @@ const baseUrl = process.env.NEXT_PUBLIC_DOWNLOAD_API_URL;
 const STUB_OPTIONS: DownloadOption[] = [
   { id: "mp3-320", label: "MP3, 320 kbps", format: "mp3" },
   { id: "wav-16", label: "WAV, 16-bit / 44.1 kHz", format: "wav" },
-  { id: "wav-24", label: "WAV, 24-bit / 48 kHz", format: "wav" },
 ];
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
