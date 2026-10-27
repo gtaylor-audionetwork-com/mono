@@ -1,4 +1,4 @@
-describe("@web/host marketing /login", () => {
+describe("@web/host support /login", () => {
   it("shows a login page without the catalogue app shell", () => {
     cy.visit("/login");
     cy.findByRole("heading", { level: 1, name: "Log in" }).should("be.visible");
@@ -11,5 +11,6 @@ describe("@web/host marketing /login", () => {
     cy.findByRole("button", { name: "Log in (demo)" }).click();
     cy.url().should("include", "/projects/coastal-studies");
     cy.findByRole("button", { name: "Log out" }).should("be.visible");
+    cy.findByRole("navigation", { name: "Projects" }).should("be.visible");
   });
 });

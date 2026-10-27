@@ -10,18 +10,16 @@ export default function WorkWithUsPage() {
     <>
       <h1>Why work with us</h1>
       <p>
-        This page is part of the logged-out marketing surface — like acquisition and partner content in
-        musicapp. It lives in the marketing route group and is hidden from the nav once
-        you sign in.
+        Partner and acquisition content lives in the catalogue app so visitors can preview tracks while they
+        read — the player stays available. Sign in when you are ready to save work to projects.
       </p>
       <ul>
         <li>Licensing built for production teams, agencies, and broadcast.</li>
-        <li>Clear rights, stems, and formats when you are ready to download.</li>
+        <li>Clear rights, stems, and formats when you download.</li>
         <li>Projects to collect tracks before you commit.</li>
       </ul>
       <p>
-        <Link href="/login">Log in</Link> to use projects, or <Link href="/">browse the catalogue</Link>{" "}
-        without an account.
+        <Link href="/login">Log in</Link> for projects, or <Link href="/">browse featured tracks</Link> below.
       </p>
     </>
   );

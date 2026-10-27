@@ -66,10 +66,13 @@ function specsForChangedFile(file) {
   if (file.startsWith("tooling/cypress/")) {
     return SPEC_SETS.full;
   }
-  if (file.startsWith("apps/host/app/(marketing)/")) {
+  if (file.startsWith("apps/host/app/(support)/")) {
     return SPEC_SETS.marketing;
   }
   if (file.startsWith("apps/host/app/(app)/")) {
+    if (file.includes("/work-with-us/")) {
+      return [SPEC.nav, SPEC.marketingWorkWithUs];
+    }
     return SPEC_SETS.hostAppIntegration;
   }
   if (file.startsWith("apps/host/app/api/")) {

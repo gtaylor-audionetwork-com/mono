@@ -22,10 +22,11 @@ pnpm e2e:affected:run             # run only those specs (host must be on :9000)
 ```
 
 Routes: `/` (home), `/albums`, `/album/[id]`, `/projects/[id]` ( **`(app)`** group — full `AppShell`), and
-`/login`, `/support`, `/work-with-us` ( **`(marketing)`** group — `MarketingShell`, no player or modals).
-**Why work with us** appears in the header only while logged out. **`/projects/*`** is
+`/login` and `/support` ( **`(support)`** group — `SupportShell`, help-focused chrome, no player).
+`/work-with-us` lives in **`(app)`** with the player; **Why work with us** nav link shows only when logged out.
+The **projects sidebar** shows only when signed in. **`/projects/*`** is
 protected by `apps/host/middleware.ts` (demo cookie `mono_demo_session`); anonymous visits redirect to
-`/login?returnTo=…`. **Log in** / **Log out** appear in both shells; `/login` is the marketing login page.
+`/login?returnTo=…`. **Log in** / **Log out** appear in the catalogue and support headers.
 The root layout only wraps
 `<html>` / `<body>`; each group picks its shell so logged-out pages do not mount app providers twice.
 
@@ -41,9 +42,9 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint/typecheck, then an **affec
 job: it prints which Cypress specs would run for the PR (see the job log and **Summary** tab) and
 runs small **pipeline** checks in each touched package — no Cypress, no Music API on CI.
 
-Host path rules (first match wins): `apps/host/app/(marketing)/` → marketing specs only;
-`apps/host/app/(app)/` → navigation + home + cross-domain travel; generic `apps/host/` → navigation +
-marketing; `tooling/cypress/` → full suite. Locally:
+Host path rules (first match wins): `apps/host/app/(support)/` → support/login specs;
+`apps/host/app/(app)/work-with-us/` → navigation + work-with-us spec; other `(app)/` → integration smoke;
+`tooling/cypress/` → full suite. Locally:
 
 ```bash
 pnpm affected:report              # same targeting table as CI (log + optional Summary locally)
