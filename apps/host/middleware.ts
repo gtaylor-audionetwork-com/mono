@@ -13,10 +13,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const signInUrl = request.nextUrl.clone();
-  signInUrl.pathname = "/support";
-  signInUrl.searchParams.set("returnTo", pathname);
-  return NextResponse.redirect(signInUrl);
+  const loginUrl = request.nextUrl.clone();
+  loginUrl.pathname = "/login";
+  loginUrl.searchParams.set("returnTo", pathname);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {

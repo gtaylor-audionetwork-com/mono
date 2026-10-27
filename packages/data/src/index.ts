@@ -1,4 +1,12 @@
 export type { Project, Track } from "./types";
+export {
+  DEMO_SESSION_COOKIE,
+  DEMO_SESSION_VALUE,
+  clearDemoSessionCookie,
+  hasDemoSessionCookieClient,
+  hasDemoSessionValue,
+  setDemoSessionCookie,
+} from "./demoSession";
 export { useProjectStore } from "./projects/store";
 export { AddToProjectProvider, useAddToProjectModal } from "./projects/AddToProjectProvider";
 export type { DownloadOption } from "@web/api-download";

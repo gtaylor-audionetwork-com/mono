@@ -32,6 +32,19 @@
   color: var(--color-ink);
 }
 
+.navButton {
+  font: inherit;
+  color: var(--color-muted);
+  background: none;
+  border: none;
+  padding: var(--space-1) 0;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  color: var(--color-ink);
+}
+
 .main {
   padding: var(--space-8) var(--space-6);
   max-width: 48rem;

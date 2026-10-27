@@ -24,6 +24,7 @@ const SPEC = {
   addToProject: "packages/shell/e2e/add-to-project.spec.ts",
   downloadModal: "packages/shell/e2e/download-modal.spec.ts",
   marketingSupport: "apps/host/e2e/marketing/support.spec.ts",
+  marketingLogin: "apps/host/e2e/marketing/login.spec.ts",
 };
 
 const ALL_SPECS = [
@@ -37,13 +38,14 @@ const ALL_SPECS = [
   SPEC.addToProject,
   SPEC.downloadModal,
   SPEC.marketingSupport,
+  SPEC.marketingLogin,
 ].map((relative) => path.join(repoRoot, relative));
 
 const SMOKE_SPECS = [path.join(repoRoot, SPEC.nav)];
 
 const SPEC_SETS = {
   smoke: [SPEC.nav],
-  marketing: [SPEC.marketingSupport],
+  marketing: [SPEC.marketingSupport, SPEC.marketingLogin],
   hostAppIntegration: [SPEC.nav, SPEC.home, SPEC.crossDomain],
   hostRoot: [SPEC.nav, SPEC.marketingSupport],
   shell: [SPEC.nav, SPEC.addToProject, SPEC.downloadModal],

@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import styles from "./Layout.module.css";
 import { Player } from "./Player/Player";
 import { ProjectSidebar } from "./ProjectSidebar";
+import { SessionNav } from "./SessionNav";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -33,6 +34,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 {item.label}
               </Link>
             ))}
+            <SessionNav linkClassName={styles.navLink} buttonClassName={styles.navButton} />
           </nav>
         </div>
       </header>
