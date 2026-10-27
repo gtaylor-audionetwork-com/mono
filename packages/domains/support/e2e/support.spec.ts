@@ -1,4 +1,4 @@
-describe("@web/host support /support", () => {
+describe("@web/support", () => {
   it("shows support content without the catalogue app shell", () => {
     cy.visit("/support");
     cy.findByRole("heading", { level: 1, name: "How can we help?" }).should("be.visible");

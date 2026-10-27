@@ -1,4 +1,4 @@
-describe("@web/host catalogue /login", () => {
+describe("@web/login", () => {
   it("shows login in the app shell with the player", () => {
     cy.visit("/login");
     cy.findByRole("heading", { level: 1, name: "Log in" }).should("be.visible");

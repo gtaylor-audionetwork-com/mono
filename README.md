@@ -13,6 +13,10 @@ pnpm install
 pnpm dev                          # host on http://localhost:9000
 pnpm --filter @web/home dev       # home page in its harness on :3001
 pnpm --filter @web/album dev      # album page in its harness on :3002
+pnpm --filter @web/login dev      # login in AppShell harness on :3004
+pnpm --filter @web/work-with-us dev
+pnpm --filter @web/support dev    # support in SupportShell harness on :3006
+pnpm --filter @web/collection-beats dev  # marketing beats on :3007 (MarketingShell)
 pnpm build | pnpm lint | pnpm typecheck
 pnpm cypress:open                 # E2E in Cypress (host must be on :9000)
 pnpm cypress:run                  # headless E2E against a running host
@@ -23,6 +27,8 @@ pnpm e2e:affected:run             # run only those specs (host must be on :9000)
 
 Routes: `/` (home), `/albums`, `/album/[id]`, `/projects/[id]` ( **`(app)`** group — full `AppShell`), and
 `/support` ( **`(support)`** group — `SupportShell`, help-focused chrome, no player).
+**`(marketing)`** mounts `MarketingShell` — `PlayerProvider` for API only, no catalogue nav or player bar
+(e.g. `/collection/beats`).
 `/login`, `/work-with-us`, and catalogue routes live in **`(app)`** with the **player**; **Why work with us** nav link shows only when logged out.
 The **projects sidebar** shows only when signed in. **`/projects/*`** is
 protected by `apps/host/middleware.ts` (demo cookie `mono_demo_session`); anonymous visits redirect to
@@ -42,9 +48,9 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint/typecheck, then an **affec
 job: it prints which Cypress specs would run for the PR (see the job log and **Summary** tab) and
 runs small **pipeline** checks in each touched package — no Cypress, no Music API on CI.
 
-Host path rules (first match wins): `apps/host/app/(support)/` → support specs;
-`apps/host/app/(app)/login/` → navigation + login specs;
-`apps/host/app/(app)/work-with-us/` → navigation + work-with-us spec; other `(app)/` → integration smoke;
+Host path rules (first match wins): domain packages map to their co-located E2E;
+`apps/host/app/(support)/` → `@web/support` specs; `(app)/login/` → `@web/login`; `(app)/work-with-us/` →
+`@web/work-with-us`; other `(app)/` → integration smoke;
 `tooling/cypress/` → full suite. Locally:
 
 ```bash
@@ -65,7 +71,11 @@ apps/host                    Next.js app, the only deployable. Routes re-export 
 packages/domains/home        HomePage + dev/ harness
 packages/domains/album       AlbumPage + dev/ harness
 packages/domains/projects    ProjectPage + dev/ harness
-packages/shell               AppShell: providers, Layout, ModalHost (mounted once)
+packages/domains/login       LoginPage + dev/ harness (AppShell)
+packages/domains/work-with-us  partner page + dev/ harness
+packages/domains/support     SupportPage + dev/ harness (SupportShell)
+packages/domains/collection-beats  campaign beats page + MarketingShell harness
+packages/shell               AppShell, MarketingShell, SupportShell
 packages/composites/track-list  TrackList, TrackRow
 packages/actions             DownloadOptionsButton, DownloadOptionsModal
 packages/data                Track type, ModalProvider, TanStack Query hooks

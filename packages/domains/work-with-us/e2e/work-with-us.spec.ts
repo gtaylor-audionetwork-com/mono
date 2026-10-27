@@ -1,4 +1,4 @@
-describe("@web/host catalogue /work-with-us", () => {
+describe("@web/work-with-us", () => {
   it("shows the page with player and nav link when logged out", () => {
     cy.visit("/work-with-us");
     cy.findByRole("heading", { level: 1, name: "Why work with us" }).should("be.visible");

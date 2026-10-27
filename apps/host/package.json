@@ -17,8 +17,12 @@
   "dependencies": {
     "@tanstack/react-query": "5.104.1",
     "@web/album": "workspace:*",
+    "@web/collection-beats": "workspace:*",
     "@web/home": "workspace:*",
+    "@web/login": "workspace:*",
     "@web/projects": "workspace:*",
+    "@web/support": "workspace:*",
+    "@web/work-with-us": "workspace:*",
     "@web/shell": "workspace:*",
     "next": "16.3.8",
     "react": "19.3.0",

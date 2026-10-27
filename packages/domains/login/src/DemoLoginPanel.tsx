@@ -1,8 +1,8 @@
 "use client";
 
+import { setDemoSessionCookie } from "@web/data";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DEMO_SESSION_COOKIE, DEMO_SESSION_VALUE } from "../../../lib/session";
-import styles from "./login.module.css";
+import styles from "./LoginPage.module.css";
 
 export function DemoLoginPanel() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export function DemoLoginPanel() {
         type="button"
         className={styles.primaryButton}
         onClick={() => {
-          document.cookie = `${DEMO_SESSION_COOKIE}=${DEMO_SESSION_VALUE}; path=/; SameSite=Lax`;
+          setDemoSessionCookie();
           router.push(returnTo.startsWith("/") ? returnTo : "/");
           router.refresh();
         }}

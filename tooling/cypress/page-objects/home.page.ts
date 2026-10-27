@@ -7,6 +7,8 @@ class HomePageObject extends BasePageObject {
     super();
     Object.assign(this.elements, {
       heading: () => cy.findByRole("heading", { level: 1, name: "New this week" }),
+      featuredCollectionCard: () => cy.findByRole("heading", { name: "Featured collection" }),
+      featuredCollectionLink: () => cy.findByRole("link", { name: "Open Beats for cats" }),
       featuredAlbumCard: () => cy.findByRole("heading", { name: "Featured album" }),
       featuredAlbumLink: () => cy.findAllByRole("link", { name: /^Open / }).first(),
       featuredTracksHeading: () => cy.findByRole("heading", { name: "Featured tracks" }),
