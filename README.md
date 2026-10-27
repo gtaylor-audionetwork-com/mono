@@ -21,7 +21,9 @@ pnpm e2e:affected                 # list Cypress specs for this branch vs main
 pnpm e2e:affected:run             # run only those specs (host must be on :9000)
 ```
 
-Routes: `/` (home), `/albums`, `/album/[id]`, and `/projects/[id]`.
+Routes: `/` (home), `/albums`, `/album/[id]`, `/projects/[id]` ( **`(app)`** group — full `AppShell`), and
+`/support` ( **`(marketing)`** group — `MarketingShell`, no player or modals). The root layout only wraps
+`<html>` / `<body>`; each group picks its shell so logged-out pages do not mount app providers twice.
 
 ### End-to-end tests
 
@@ -33,7 +35,11 @@ Cypress **runs from** `apps/host` (port 9000) but **specs live next to the code 
 
 GitHub Actions (`.github/workflows/ci.yml`) runs lint/typecheck, then an **affected test targeting**
 job: it prints which Cypress specs would run for the PR (see the job log and **Summary** tab) and
-runs small **pipeline** checks in each touched package — no Cypress, no Music API on CI. Locally:
+runs small **pipeline** checks in each touched package — no Cypress, no Music API on CI.
+
+Host path rules (first match wins): `apps/host/app/(marketing)/` → marketing specs only;
+`apps/host/app/(app)/` → navigation + home + cross-domain travel; generic `apps/host/` → navigation +
+marketing; `tooling/cypress/` → full suite. Locally:
 
 ```bash
 pnpm affected:report              # same targeting table as CI (log + optional Summary locally)
@@ -93,8 +99,8 @@ the host's (or harness's) single copy runs. Library packages are consumed as Typ
 - **Download API.** `packages/api/download/src/client.ts` uses invented endpoints
   (`GET /tracks/:id/download-options`, `POST /downloads`). With `NEXT_PUBLIC_DOWNLOAD_API_URL`
   unset, it returns stub data. See `apps/host/.env.example`.
-- **Track and album data.** Hardcoded in each domain package (`sampleTracks.ts`, `sampleAlbums.ts`)
-  until a Music API is in scope.
+- **Track and album data.** Home and albums use the Music API when `MUSIC_API_*` env vars are set.
+  Project seed data in `packages/data` remains hardcoded until projects are wired to a backend.
 - **Package scope** `@web/*` and the brand name in `packages/shell/src/layout/Layout.tsx`.
 
 E2E: Cypress in `apps/host`. Unit tests are not included yet.

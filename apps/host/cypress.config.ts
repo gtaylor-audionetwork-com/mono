@@ -8,6 +8,7 @@ export default defineConfig({
     specPattern: [
       "../../packages/domains/*/e2e/**/*.spec.ts",
       "../../packages/shell/e2e/**/*.spec.ts",
+      "e2e/**/*.spec.ts",
     ],
     supportFile: "../../tooling/cypress/support/e2e.ts",
     fixturesFolder: "../../tooling/cypress/fixtures",

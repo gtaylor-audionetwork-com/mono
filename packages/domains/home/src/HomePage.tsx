@@ -1,12 +1,15 @@
 import Link from "next/link";
-import { getAlbums } from "@web/data/catalogue";
+import { getAlbum, getAlbums } from "@web/data/catalogue";
 import { TrackList } from "@web/track-list";
 import { Card } from "@web/ui";
-import { featuredTracks } from "./sampleTracks";
 import styles from "./HomePage.module.css";
 
+const FEATURED_TRACK_LIMIT = 5;
+
 export async function HomePage() {
-  const [featured] = await getAlbums();
+  const [featuredSummary] = await getAlbums();
+  const featuredAlbum = featuredSummary ? await getAlbum(featuredSummary.id) : undefined;
+  const featuredTracks = featuredAlbum?.tracks.slice(0, FEATURED_TRACK_LIMIT) ?? [];
 
   return (
     <div className={styles.page}>
@@ -14,14 +17,16 @@ export async function HomePage() {
         <h1 className={styles.heading}>New this week</h1>
         <p className={styles.intro}>Fresh tracks added to the catalogue, ready to download in the format you need.</p>
       </div>
-      {featured ? (
+      {featuredSummary ? (
         <Card title="Featured album">
-          {featured.artworkUrl ? (
-            <img className={styles.artwork} src={featured.artworkUrl} alt="" />
+          {featuredSummary.artworkUrl ? (
+            <img className={styles.artwork} src={featuredSummary.artworkUrl} alt="" />
           ) : null}
-          {featured.shortDescription ? <p className={styles.intro}>{featured.shortDescription}</p> : null}
+          {featuredSummary.shortDescription ? (
+            <p className={styles.intro}>{featuredSummary.shortDescription}</p>
+          ) : null}
           <p className={styles.cardLink}>
-            <Link href={`/album/${featured.id}`}>Open {featured.title}</Link>
+            <Link href={`/album/${featuredSummary.id}`}>Open {featuredSummary.title}</Link>
           </p>
         </Card>
       ) : null}

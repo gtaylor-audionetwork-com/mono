@@ -10,6 +10,7 @@ import { ProjectSidebar } from "./ProjectSidebar";
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/albums", label: "Albums" },
+  { href: "/support", label: "Support" },
 ];
 
 export function Layout({ children }: { children: ReactNode }) {

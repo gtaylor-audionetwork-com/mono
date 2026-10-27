@@ -84,8 +84,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     dispatch({ type: "initialisePlayHistory", playHistory: readSessionHistory() });
     setAudioVolume(0.5);
-    return () => dispatch({ type: "stop" });
-  }, [setAudioVolume]);
+    return () => {
+      pause();
+      dispatch({ type: "stop" });
+    };
+  }, [pause, setAudioVolume]);
 
   const remember = useCallback((track: Track) => {
     const history = stateRef.current.playHistory;

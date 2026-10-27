@@ -4,7 +4,7 @@ export type CatalogueTrack = {
   artist: string;
   durationSeconds: number;
   src?: string;
-  album?: { id: string; title: string };
+  album?: { id: string; title: string; artworkUrl?: string };
 };
 
 export type AlbumSummary = {

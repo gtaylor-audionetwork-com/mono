@@ -39,7 +39,10 @@ function previewSrc(track: MusicTrack, albumNumber?: number): string | undefined
   return `https://preview.audionetwork.com/Preview/tracks/mp3/v5res/ANW${album}/${trackNumber}.mp3`;
 }
 
-function toTrack(track: MusicTrack, album?: { id: string; title: string }): CatalogueTrack {
+function toTrack(
+  track: MusicTrack,
+  album?: { id: string; title: string; artworkUrl?: string },
+): CatalogueTrack {
   const albumNumber = album ? Number(album.id) : track.album?.number ?? undefined;
   return {
     id: String(track.id),
@@ -113,7 +116,13 @@ export async function getAlbum(albumId: string): Promise<CatalogueAlbum | undefi
   const tracks = (rawTracks ?? [])
     .filter((track) => track.mix === 1)
     .slice(0, TRACK_LIMIT)
-    .map((track) => toTrack(track, { id: String(album.number), title: album.name }));
+    .map((track) =>
+      toTrack(track, {
+        id: String(album.number),
+        title: album.name,
+        artworkUrl: album.artworkImageUrl || "",
+      }),
+    );
 
   return { ...toSummary(album), tracks };
 }

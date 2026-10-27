@@ -8,6 +8,7 @@
   "include": [
     "../../../../tooling/cypress/**/*.ts",
     "../../../../packages/domains/*/e2e/**/*.ts",
-    "../../../../packages/shell/e2e/**/*.ts"
+    "../../../../packages/shell/e2e/**/*.ts",
+    "../e2e/**/*.ts"
   ]
 }

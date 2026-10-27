@@ -2,6 +2,8 @@
 /**
  * Maps git-changed paths to Cypress spec files. Used locally and in GitHub Actions
  * to run a subset of E2E instead of the full suite.
+ *
+ * Host paths use first-match rules so `(marketing)/` edits do not pull the full suite.
  */
 import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
@@ -11,62 +13,91 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "../..");
 
+const SPEC = {
+  home: "packages/domains/home/e2e/home.spec.ts",
+  albums: "packages/domains/album/e2e/albums.spec.ts",
+  albumTracks: "packages/domains/album/e2e/album-tracks.spec.ts",
+  crossDomain: "packages/domains/album/e2e/cross-domain-travel.spec.ts",
+  projects: "packages/domains/projects/e2e/projects.spec.ts",
+  nav: "packages/shell/e2e/navigation.spec.ts",
+  addToProject: "packages/shell/e2e/add-to-project.spec.ts",
+  downloadModal: "packages/shell/e2e/download-modal.spec.ts",
+  marketingSupport: "apps/host/e2e/marketing/support.spec.ts",
+};
+
 const ALL_SPECS = [
-  "packages/domains/home/e2e/home.spec.ts",
-  "packages/domains/album/e2e/albums.spec.ts",
-  "packages/domains/album/e2e/album-tracks.spec.ts",
-  "packages/domains/album/e2e/cross-domain-travel.spec.ts",
-  "packages/domains/projects/e2e/projects.spec.ts",
-  "packages/shell/e2e/navigation.spec.ts",
-  "packages/shell/e2e/add-to-project.spec.ts",
-  "packages/shell/e2e/download-modal.spec.ts",
-].map((spec) => path.join(repoRoot, spec));
+  SPEC.home,
+  SPEC.albums,
+  SPEC.albumTracks,
+  SPEC.crossDomain,
+  SPEC.projects,
+  SPEC.nav,
+  SPEC.addToProject,
+  SPEC.downloadModal,
+  SPEC.marketingSupport,
+].map((relative) => path.join(repoRoot, relative));
 
-const SMOKE_SPECS = [path.join(repoRoot, "packages/shell/e2e/navigation.spec.ts")];
+const SMOKE_SPECS = [path.join(repoRoot, SPEC.nav)];
 
-/** Longest-prefix wins within a group; union across matching rules. */
-const RULES = [
-  {
-    test: (file) => file.startsWith("packages/domains/home/"),
-    specs: () => [
-      "packages/domains/home/e2e/home.spec.ts",
-      "packages/shell/e2e/navigation.spec.ts",
-    ],
-  },
-  {
-    test: (file) => file.startsWith("packages/domains/album/"),
-    specs: () => [
-      "packages/domains/album/e2e/albums.spec.ts",
-      "packages/domains/album/e2e/album-tracks.spec.ts",
-      "packages/domains/album/e2e/cross-domain-travel.spec.ts",
-      "packages/shell/e2e/navigation.spec.ts",
-    ],
-  },
-  {
-    test: (file) => file.startsWith("packages/domains/projects/"),
-    specs: () => [
-      "packages/domains/projects/e2e/projects.spec.ts",
-      "packages/shell/e2e/navigation.spec.ts",
-    ],
-  },
-  {
-    test: (file) =>
-      file.startsWith("packages/shell/") ||
-      file.startsWith("packages/actions/") ||
-      file.startsWith("packages/data/") ||
-      file.startsWith("packages/composites/") ||
-      file.startsWith("packages/api/download/"),
-    specs: () => [
-      "packages/shell/e2e/navigation.spec.ts",
-      "packages/shell/e2e/add-to-project.spec.ts",
-      "packages/shell/e2e/download-modal.spec.ts",
-    ],
-  },
-  {
-    test: (file) => file.startsWith("apps/host/") || file.startsWith("tooling/cypress/"),
-    specs: () => ALL_SPECS.map((absolute) => path.relative(repoRoot, absolute)),
-  },
-];
+const SPEC_SETS = {
+  smoke: [SPEC.nav],
+  marketing: [SPEC.marketingSupport],
+  hostAppIntegration: [SPEC.nav, SPEC.home, SPEC.crossDomain],
+  hostRoot: [SPEC.nav, SPEC.marketingSupport],
+  shell: [SPEC.nav, SPEC.addToProject, SPEC.downloadModal],
+  home: [SPEC.home, SPEC.nav],
+  album: [SPEC.albums, SPEC.albumTracks, SPEC.crossDomain, SPEC.nav],
+  projects: [SPEC.projects, SPEC.nav],
+  full: ALL_SPECS.map((absolute) => path.relative(repoRoot, absolute)),
+};
+
+/**
+ * First matching rule wins for each changed file (most specific host paths first).
+ * @param {string} file
+ * @returns {string[] | null}
+ */
+function specsForChangedFile(file) {
+  if (file.startsWith("tooling/cypress/")) {
+    return SPEC_SETS.full;
+  }
+  if (file.startsWith("apps/host/app/(marketing)/")) {
+    return SPEC_SETS.marketing;
+  }
+  if (file.startsWith("apps/host/app/(app)/")) {
+    return SPEC_SETS.hostAppIntegration;
+  }
+  if (file.startsWith("apps/host/app/api/")) {
+    return SPEC_SETS.hostAppIntegration;
+  }
+  if (file.startsWith("apps/host/middleware.")) {
+    return [...SPEC_SETS.hostAppIntegration, SPEC.projects];
+  }
+  if (file.startsWith("apps/host/e2e/marketing/")) {
+    return SPEC_SETS.marketing;
+  }
+  if (file.startsWith("apps/host/")) {
+    return SPEC_SETS.hostRoot;
+  }
+  if (file.startsWith("packages/domains/home/")) {
+    return SPEC_SETS.home;
+  }
+  if (file.startsWith("packages/domains/album/")) {
+    return SPEC_SETS.album;
+  }
+  if (file.startsWith("packages/domains/projects/")) {
+    return SPEC_SETS.projects;
+  }
+  if (
+    file.startsWith("packages/shell/") ||
+    file.startsWith("packages/actions/") ||
+    file.startsWith("packages/data/") ||
+    file.startsWith("packages/composites/") ||
+    file.startsWith("packages/api/download/")
+  ) {
+    return SPEC_SETS.shell;
+  }
+  return null;
+}
 
 function parseArgs(argv) {
   const args = { base: "main", format: "list" };
@@ -137,12 +168,11 @@ function selectSpecs(changedFiles) {
   let matchedRule = false;
 
   for (const file of changedFiles) {
-    for (const rule of RULES) {
-      if (!rule.test(file)) continue;
-      matchedRule = true;
-      for (const spec of rule.specs()) {
-        relativeSelected.add(spec);
-      }
+    const specs = specsForChangedFile(file);
+    if (!specs) continue;
+    matchedRule = true;
+    for (const spec of specs) {
+      relativeSelected.add(spec);
     }
   }
 
@@ -174,6 +204,8 @@ function formatOutput(specs, format) {
   return repoRelative.join("\n");
 }
 
+export { specsForChangedFile, SPEC_SETS };
+
 export function getAffectedPlan(baseRef) {
   const changedFiles = gitChangedFiles(baseRef) ?? [];
   const cypressSpecsAbsolute = selectSpecs(changedFiles.length ? changedFiles : null);
@@ -197,6 +229,8 @@ function pipelineTestsForCypressSpecs(cypressSpecs) {
       tests.add("packages/domains/projects/pipeline.test.mjs");
     } else if (spec.startsWith("packages/shell/")) {
       tests.add("packages/shell/pipeline.test.mjs");
+    } else if (spec.startsWith("apps/host/")) {
+      tests.add("apps/host/pipeline.test.mjs");
     }
   }
   return [...tests].sort();

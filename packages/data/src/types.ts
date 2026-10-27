@@ -1,6 +1,7 @@
 export type TrackAlbum = {
   id: string;
   title: string;
+  artworkUrl?: string;
 };
 
 export type Track = {
