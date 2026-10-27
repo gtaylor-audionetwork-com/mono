@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import styles from "./Layout.module.css";
 import { Player } from "./Player/Player";
 import { ProjectSidebar } from "./ProjectSidebar";
+import { LoggedOutNavLink } from "./LoggedOutNavLink";
 import { SessionNav } from "./SessionNav";
 
 const NAV = [
@@ -34,6 +35,9 @@ export function Layout({ children }: { children: ReactNode }) {
                 {item.label}
               </Link>
             ))}
+            <LoggedOutNavLink href="/work-with-us" linkClassName={styles.navLink}>
+              Why work with us
+            </LoggedOutNavLink>
             <SessionNav linkClassName={styles.navLink} buttonClassName={styles.navButton} />
           </nav>
         </div>

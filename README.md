@@ -22,7 +22,8 @@ pnpm e2e:affected:run             # run only those specs (host must be on :9000)
 ```
 
 Routes: `/` (home), `/albums`, `/album/[id]`, `/projects/[id]` ( **`(app)`** group — full `AppShell`), and
-`/login`, `/support` ( **`(marketing)`** group — `MarketingShell`, no player or modals). **`/projects/*`** is
+`/login`, `/support`, `/work-with-us` ( **`(marketing)`** group — `MarketingShell`, no player or modals).
+**Why work with us** appears in the header only while logged out. **`/projects/*`** is
 protected by `apps/host/middleware.ts` (demo cookie `mono_demo_session`); anonymous visits redirect to
 `/login?returnTo=…`. **Log in** / **Log out** appear in both shells; `/login` is the marketing login page.
 The root layout only wraps
