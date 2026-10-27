@@ -11,6 +11,7 @@ function firstFeaturedTrackTitle(): Cypress.Chainable<string> {
 
 describe("@web/shell add to project modal", () => {
   beforeEach(() => {
+    cy.signInDemo();
     cy.requireMusicCatalogue();
     homePage.visit();
   });

@@ -22,7 +22,9 @@ pnpm e2e:affected:run             # run only those specs (host must be on :9000)
 ```
 
 Routes: `/` (home), `/albums`, `/album/[id]`, `/projects/[id]` ( **`(app)`** group — full `AppShell`), and
-`/support` ( **`(marketing)`** group — `MarketingShell`, no player or modals). The root layout only wraps
+`/support` ( **`(marketing)`** group — `MarketingShell`, no player or modals). **`/projects/*`** is
+protected by `apps/host/middleware.ts` (demo cookie `mono_demo_session`); anonymous visits redirect to
+`/support?returnTo=…` with a **Continue with demo sign-in** button. The root layout only wraps
 `<html>` / `<body>`; each group picks its shell so logged-out pages do not mount app providers twice.
 
 ### End-to-end tests

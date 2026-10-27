@@ -3,7 +3,7 @@ export class BasePageObject {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- page objects merge selectors at runtime
   elements: any = {
     header: {
-      brandLink: () => cy.findByRole("link", { name: "Music catalogue" }),
+      brandLink: () => cy.findByRole("link", { name: "My monorepo" }),
       homeLink: () => cy.findByRole("navigation", { name: "Main" }).findByRole("link", { name: "Home" }),
       albumsLink: () => cy.findByRole("navigation", { name: "Main" }).findByRole("link", { name: "Albums" }),
     },

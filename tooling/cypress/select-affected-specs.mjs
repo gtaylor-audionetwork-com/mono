@@ -19,6 +19,7 @@ const SPEC = {
   albumTracks: "packages/domains/album/e2e/album-tracks.spec.ts",
   crossDomain: "packages/domains/album/e2e/cross-domain-travel.spec.ts",
   projects: "packages/domains/projects/e2e/projects.spec.ts",
+  projectsAuth: "packages/domains/projects/e2e/projects-auth.spec.ts",
   nav: "packages/shell/e2e/navigation.spec.ts",
   addToProject: "packages/shell/e2e/add-to-project.spec.ts",
   downloadModal: "packages/shell/e2e/download-modal.spec.ts",
@@ -31,6 +32,7 @@ const ALL_SPECS = [
   SPEC.albumTracks,
   SPEC.crossDomain,
   SPEC.projects,
+  SPEC.projectsAuth,
   SPEC.nav,
   SPEC.addToProject,
   SPEC.downloadModal,
@@ -47,7 +49,7 @@ const SPEC_SETS = {
   shell: [SPEC.nav, SPEC.addToProject, SPEC.downloadModal],
   home: [SPEC.home, SPEC.nav],
   album: [SPEC.albums, SPEC.albumTracks, SPEC.crossDomain, SPEC.nav],
-  projects: [SPEC.projects, SPEC.nav],
+  projects: [SPEC.projects, SPEC.projectsAuth, SPEC.nav],
   full: ALL_SPECS.map((absolute) => path.relative(repoRoot, absolute)),
 };
 
@@ -69,8 +71,8 @@ function specsForChangedFile(file) {
   if (file.startsWith("apps/host/app/api/")) {
     return SPEC_SETS.hostAppIntegration;
   }
-  if (file.startsWith("apps/host/middleware.")) {
-    return [...SPEC_SETS.hostAppIntegration, SPEC.projects];
+  if (file.startsWith("apps/host/middleware.") || file.startsWith("apps/host/lib/session.")) {
+    return [...SPEC_SETS.hostAppIntegration, SPEC.projects, SPEC.projectsAuth];
   }
   if (file.startsWith("apps/host/e2e/marketing/")) {
     return SPEC_SETS.marketing;
