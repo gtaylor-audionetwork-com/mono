@@ -1,9 +1,11 @@
-describe("@web/host support /login", () => {
-  it("shows a login page without the catalogue app shell", () => {
+describe("@web/host catalogue /login", () => {
+  it("shows login in the app shell with the player", () => {
     cy.visit("/login");
     cy.findByRole("heading", { level: 1, name: "Log in" }).should("be.visible");
     cy.findByRole("button", { name: "Log in (demo)" }).should("be.visible");
-    cy.findByRole("region", { name: "Player" }).should("not.exist");
+    cy.findByRole("navigation", { name: "Main" }).should("be.visible");
+    cy.findByRole("region", { name: "Player" }).should("be.visible");
+    cy.findByRole("navigation", { name: "Projects" }).should("not.exist");
   });
 
   it("signs in and returns to returnTo", () => {

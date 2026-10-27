@@ -18,7 +18,7 @@ export default function LoginPage() {
       <p>
         <Link href="/">Back to catalogue</Link>
         {" · "}
-        <Link href="/support">Support home</Link>
+        <Link href="/support">Support</Link>
       </p>
     </>
   );

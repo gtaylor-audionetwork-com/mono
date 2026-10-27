@@ -47,7 +47,8 @@ const SMOKE_SPECS = [path.join(repoRoot, SPEC.nav)];
 
 const SPEC_SETS = {
   smoke: [SPEC.nav],
-  marketing: [SPEC.marketingSupport, SPEC.marketingLogin, SPEC.marketingWorkWithUs],
+  marketing: [SPEC.marketingSupport],
+  appLogin: [SPEC.nav, SPEC.marketingLogin],
   hostAppIntegration: [SPEC.nav, SPEC.home, SPEC.crossDomain],
   hostRoot: [SPEC.nav, SPEC.marketingSupport],
   shell: [SPEC.nav, SPEC.addToProject, SPEC.downloadModal],
@@ -68,6 +69,9 @@ function specsForChangedFile(file) {
   }
   if (file.startsWith("apps/host/app/(support)/")) {
     return SPEC_SETS.marketing;
+  }
+  if (file.startsWith("apps/host/app/(app)/login/")) {
+    return SPEC_SETS.appLogin;
   }
   if (file.startsWith("apps/host/app/(app)/")) {
     if (file.includes("/work-with-us/")) {

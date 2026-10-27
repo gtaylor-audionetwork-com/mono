@@ -22,8 +22,8 @@ pnpm e2e:affected:run             # run only those specs (host must be on :9000)
 ```
 
 Routes: `/` (home), `/albums`, `/album/[id]`, `/projects/[id]` ( **`(app)`** group — full `AppShell`), and
-`/login` and `/support` ( **`(support)`** group — `SupportShell`, help-focused chrome, no player).
-`/work-with-us` lives in **`(app)`** with the player; **Why work with us** nav link shows only when logged out.
+`/support` ( **`(support)`** group — `SupportShell`, help-focused chrome, no player).
+`/login`, `/work-with-us`, and catalogue routes live in **`(app)`** with the **player**; **Why work with us** nav link shows only when logged out.
 The **projects sidebar** shows only when signed in. **`/projects/*`** is
 protected by `apps/host/middleware.ts` (demo cookie `mono_demo_session`); anonymous visits redirect to
 `/login?returnTo=…`. **Log in** / **Log out** appear in the catalogue and support headers.
@@ -42,7 +42,8 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint/typecheck, then an **affec
 job: it prints which Cypress specs would run for the PR (see the job log and **Summary** tab) and
 runs small **pipeline** checks in each touched package — no Cypress, no Music API on CI.
 
-Host path rules (first match wins): `apps/host/app/(support)/` → support/login specs;
+Host path rules (first match wins): `apps/host/app/(support)/` → support specs;
+`apps/host/app/(app)/login/` → navigation + login specs;
 `apps/host/app/(app)/work-with-us/` → navigation + work-with-us spec; other `(app)/` → integration smoke;
 `tooling/cypress/` → full suite. Locally:
 
