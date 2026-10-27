@@ -1,0 +1,10 @@
+packages:
+  - "apps/*"
+  - "packages/domains/*"
+  - "packages/shell"
+  - "packages/actions"
+  - "packages/data"
+  - "packages/composites/*"
+  - "packages/api/*"
+  - "packages/foundations/*"
+  - "tooling/*"

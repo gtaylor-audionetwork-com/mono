@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["cypress", "@testing-library/cypress"],
+    "noEmit": true,
+    "strict": false
+  },
+  "include": [
+    "../../../../tooling/cypress/**/*.ts",
+    "../../../../packages/domains/*/e2e/**/*.ts",
+    "../../../../packages/shell/e2e/**/*.ts"
+  ]
+}

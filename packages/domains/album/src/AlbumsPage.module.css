@@ -1,0 +1,17 @@
+.page { display: grid; gap: var(--space-8); }
+.heading { font-size: 2rem; margin-bottom: var(--space-2); }
+.intro { color: var(--color-muted); margin: 0; max-width: 60ch; }
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-4);
+}
+.artwork {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-panel);
+  margin-bottom: var(--space-4);
+}
+.description { color: var(--color-muted); margin: 0; }
+.link { margin: var(--space-4) 0 0; font-weight: 500; }

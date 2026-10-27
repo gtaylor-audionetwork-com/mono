@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  e2e-affected:
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    env:
+      MUSIC_API_URL: ${{ secrets.MUSIC_API_URL }}
+      MUSIC_API_KEY: ${{ secrets.MUSIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Resolve affected Cypress specs
+        id: specs
+        run: |
+          BASE="origin/${{ github.event.pull_request.base.ref || github.event.repository.default_branch || 'main' }}"
+          node tooling/cypress/select-affected-specs.mjs --base "${BASE}" --format github >> "$GITHUB_OUTPUT"
+
+      - name: List selected specs
+        run: |
+          echo "count=${{ steps.specs.outputs.count }}"
+          echo "${{ steps.specs.outputs.specs }}" | tr ',' '\n'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build host
+        run: pnpm --filter @web/host build
+
+      - name: Run affected E2E
+        run: |
+          SPECS="${{ steps.specs.outputs.specs }}"
+          pnpm --filter @web/host exec start-server-and-test \
+            start http://localhost:9000 \
+            "cypress run --e2e --spec ${SPECS}"

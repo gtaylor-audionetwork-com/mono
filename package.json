@@ -1,0 +1,20 @@
+{
+  "name": "mono",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "turbo run dev --filter=@web/host",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "cypress:open": "pnpm --filter @web/host cypress:open",
+    "cypress:run": "pnpm --filter @web/host cypress:run",
+    "e2e": "pnpm --filter @web/host e2e",
+    "e2e:ci": "pnpm --filter @web/host e2e:ci",
+    "e2e:affected": "node tooling/cypress/select-affected-specs.mjs",
+    "e2e:affected:run": "node tooling/cypress/run-affected.mjs"
+  },
+  "devDependencies": {
+    "turbo": "2.11.6"
+  }
+}

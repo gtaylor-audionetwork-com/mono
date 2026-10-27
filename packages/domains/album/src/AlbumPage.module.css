@@ -1,0 +1,21 @@
+.page { display: grid; gap: var(--space-6); }
+.artwork {
+  width: 12rem;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-panel);
+  margin-bottom: var(--space-4);
+}
+.meta { color: var(--color-muted); margin: 0; }
+.missing { color: var(--color-muted); }
+.homeButton {
+  justify-self: start;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  text-decoration: none;
+}

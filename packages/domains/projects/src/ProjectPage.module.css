@@ -1,0 +1,10 @@
+.page {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.meta,
+.missing {
+  color: var(--color-muted);
+  margin: 0;
+}

@@ -1,0 +1,42 @@
+.player {
+  position: fixed;
+  inset: auto 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-line);
+}
+
+.playerButton {
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.nowPlaying {
+  display: grid;
+  min-width: 0;
+}
+
+.trackTitle {
+  margin: 0;
+  font-weight: 500;
+}
+
+.albumLink {
+  color: var(--color-accent);
+}
+
+.playerProgress {
+  flex: 1 1 8rem;
+  min-width: 8rem;
+}

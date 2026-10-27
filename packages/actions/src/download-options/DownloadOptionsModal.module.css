@@ -1,0 +1,14 @@
+.dialog {
+  width: min(440px, calc(100vw - 32px));
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  color: var(--color-ink);
+}
+.dialog::backdrop { background: rgb(15 18 26 / 0.45); }
+.title { font-size: 1.25rem; margin-bottom: var(--space-1); }
+.subtitle { color: var(--color-muted); margin: 0 0 var(--space-6); }
+.status { color: var(--color-muted); margin: 0 0 var(--space-6); }
+.error { color: #c0392b; margin: var(--space-4) 0 0; }
+.actions { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-6); }
